@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-ink font-sans text-white antialiased;
+    /* Very subtle top glow to give the black some depth */
+    background-image: radial-gradient(
+      ellipse 80% 40% at 50% -10%,
+      rgba(255, 210, 31, 0.06),
+      transparent 70%
+    );
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-brand text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-ink;
+  }
+
+  /* Thin dark scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #27272a transparent;
+  }
+}
+
+@layer components {
+  /* ---------- Surfaces ---------- */
+  .surface {
+    @apply rounded-card border border-line bg-ink-800 shadow-card;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%);
+  }
+
+  /* ---------- Match card ---------- */
+  .match-card {
+    @apply surface relative block overflow-hidden p-4 transition-all duration-200 ease-out sm:p-5;
+  }
+
+  .match-card:hover {
+    @apply -translate-y-0.5 border-brand/40 shadow-card-hover;
+  }
+
+  .match-card:active {
+    @apply translate-y-0 scale-[0.99];
+  }
+
+  /* Yellow accent rail on the left of live cards */
+  .match-card-live::before {
+    content: '';
+    @apply absolute inset-y-0 left-0 w-[3px] bg-brand;
+  }
+
+  /* ---------- Badges ---------- */
+  .badge {
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-bold uppercase leading-none tracking-wider;
+  }
+
+  .live-badge {
+    @apply badge bg-brand text-ink;
+  }
+
+  .scheduled-badge {
+    @apply badge border border-line bg-ink-700 text-white/80;
+  }
+
+  .finished-badge {
+    @apply badge border border-line bg-transparent text-muted;
+  }
+
+  /* Pulsing dot used inside LIVE badges */
+  .live-dot {
+    @apply relative inline-flex h-1.5 w-1.5;
+  }
+
+  .live-dot::before {
+    content: '';
+    @apply absolute inline-flex h-full w-full animate-live-ping rounded-full bg-current;
+  }
+
+  .live-dot::after {
+    content: '';
+    @apply relative inline-flex h-1.5 w-1.5 rounded-full bg-current;
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav-link {
+    @apply relative flex items-center gap-1.5 px-2.5 py-2 text-sm font-semibold text-white/70 transition-colors duration-200 hover:text-white sm:px-3;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute inset-x-2.5 -bottom-[13px] h-[2px] origin-center scale-x-0 rounded-full bg-brand transition-transform duration-200 ease-out sm:inset-x-3;
+  }
+
+  .nav-link:hover::after {
+    @apply scale-x-50;
+  }
+
+  .nav-link-active {
+    @apply text-brand hover:text-brand;
+  }
+
+  .nav-link-active::after,
+  .nav-link-active:hover::after {
+    @apply scale-x-100;
+  }
+
+  /* ---------- Chips / filter tabs ---------- */
+  .chip {
+    @apply inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-ink-800 px-3.5 py-2 text-sm font-semibold text-white/70 transition-all duration-200 hover:border-line-strong hover:bg-ink-700 hover:text-white active:scale-95;
+  }
+
+  .chip-active {
+    @apply border-brand bg-brand text-ink hover:border-brand hover:bg-brand-light hover:text-ink;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition-all duration-150 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand text-ink hover:bg-brand-light;
+  }
+
+  .btn-ghost {
+    @apply btn border border-line bg-ink-800 text-white hover:border-brand/50 hover:text-brand;
+  }
+
+  /* ---------- Inputs ---------- */
+  .input {
+    @apply w-full rounded-lg border border-line bg-ink px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 transition-colors focus:border-brand/60 focus:outline-none focus:ring-2 focus:ring-brand/20;
+  }
+
+  /* ---------- Skeletons ---------- */
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-ink-700;
+  }
+
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full animate-shimmer;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.04) 40%,
+      rgba(255, 210, 31, 0.06) 50%,
+      rgba(255, 255, 255, 0.04) 60%,
+      transparent
+    );
+  }
+
+  /* ---------- Grid with staggered entrance ---------- */
+  .match-grid {
+    @apply grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .match-grid > * {
+    @apply animate-fade-up;
+  }
+
+  .match-grid > *:nth-child(2) { animation-delay: 40ms; }
+  .match-grid > *:nth-child(3) { animation-delay: 80ms; }
+  .match-grid > *:nth-child(4) { animation-delay: 120ms; }
+  .match-grid > *:nth-child(5) { animation-delay: 160ms; }
+  .match-grid > *:nth-child(6) { animation-delay: 200ms; }
+  .match-grid > *:nth-child(n + 7) { animation-delay: 240ms; }
+
+  /* Hide scrollbar on horizontal chip rows */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
